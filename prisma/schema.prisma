@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  role      String    @default("user") // 'user' | 'admin'
+  createdAt DateTime  @default(now())
+  sessions  Session[]
+  votes     Vote[]
+  comments  Comment[]
+  scripts   Script[]  @relation("UserScripts")
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Script {
+  id               Int       @id @default(autoincrement())
+  title            String
+  game             String
+  description      String
+  code             String
+  functionalityCsv String
+  mobileFriendly   Boolean
+  keysystem        String
+  status           String    @default("approved") // 'pending' | 'approved' | 'rejected'
+  imageUrl         String?   // from ref site
+  rawScriptUrl     String?   // from ref site
+  externalId       String?   @unique
+  creatorName      String?   // from ref site
+  createdAt        DateTime  @default(now())
+  userId           Int?      // uploader
+  user             User?     @relation("UserScripts", fields: [userId], references: [id])
+  votes            Vote[]
+  comments         Comment[]
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  scriptId  Int
+  value     Int      // +1 or -1
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  script    Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  @@unique([userId, scriptId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  scriptId  Int
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  script    Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+}

@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a Next.js 15 app with Prisma, SQLite, and minimal auth, moderation, votes, comments, and an import from rscripts.net.
 
 ## Getting Started
 
@@ -29,8 +29,31 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## GitHub Repository
+1. Initialize and commit:
+```bash
+git init
+git add -A
+git commit -m "Initial commit"
+git branch -M main
+```
+2. Create a new GitHub repository, then add and push:
+```bash
+git remote add origin https://github.com/<your-username>/<repo>.git
+git push -u origin main
+```
+3. CI is configured via `.github/workflows/ci.yml`:
+- Node `20`, runs `npm ci`, `npx prisma generate`, `npm run lint`, `npm run build`.
+
+## Environment
+Create `.env` from the example:
+```bash
+cp .env.example .env
+```
+Node `>=20` is required for Prisma.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out Next.js deployment docs for more details.
