@@ -4,8 +4,9 @@ import Votes from "@/app/components/Votes";
 import CommentList from "@/app/components/CommentList";
 import CommentForm from "@/app/components/CommentForm";
 
-export default async function ScriptDetail({ params }: { params: { id: string } }) {
-  const row = await prisma.script.findUnique({ where: { id: Number(params.id) } });
+export default async function ScriptDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const row = await prisma.script.findUnique({ where: { id: Number(id) } });
   if (!row) {
     return (
       <div className="mx-auto max-w-3xl p-6">
@@ -27,7 +28,7 @@ export default async function ScriptDetail({ params }: { params: { id: string } 
     keysystem: row.keysystem,
     createdAt: row.createdAt.toISOString(),
   };
-  const votes = await prisma.vote.aggregate({ where: { scriptId: Number(s.id) }, _sum: { value: true } });
+  const votes = await prisma.vote.aggregate({ where: { scriptId: Number(id) }, _sum: { value: true } });
   return (
     <div className="mx-auto max-w-3xl p-6">
       <div className="flex items-center justify-between">
@@ -46,7 +47,7 @@ export default async function ScriptDetail({ params }: { params: { id: string } 
       </div>
       <div className="mt-4 flex items-center gap-3">
         <div className="text-sm">Score: {votes._sum.value ?? 0}</div>
-        <Votes scriptId={Number(s.id)} />
+        <Votes scriptId={Number(id)} />
       </div>
       <div className="mt-4 flex gap-2">
         <button
@@ -67,8 +68,8 @@ export default async function ScriptDetail({ params }: { params: { id: string } 
         </pre>
       </div>
       <div className="mt-8">
-        <CommentForm scriptId={Number(s.id)} />
-        <CommentList scriptId={Number(s.id)} />
+        <CommentForm scriptId={Number(id)} />
+        <CommentList scriptId={Number(id)} />
       </div>
     </div>
   );

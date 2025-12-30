@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 
-export async function GET(_: Request, ctx: { params: { id: string } }) {
-  const row = await prisma.script.findUnique({ where: { id: Number(ctx.params.id) } });
+export async function GET(_: Request, ctx: unknown) {
+  const { params } = ctx as { params: { id: string } };
+  const row = await prisma.script.findUnique({ where: { id: Number(params.id) } });
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const s = {
     id: String(row.id),

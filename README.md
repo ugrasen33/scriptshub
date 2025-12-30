@@ -50,10 +50,15 @@ Create `.env` from the example:
 ```bash
 cp .env.example .env
 ```
+Set `DATABASE_URL` to a Postgres connection string (e.g., Neon). Set `NEXT_PUBLIC_BASE_URL` to your Vercel URL.
 Node `>=20` is required for Prisma.
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out Next.js deployment docs for more details.
+Recommended build command on Vercel:
+```
+prisma generate && prisma db push && npm run build
+```
+This applies the schema to your Postgres database without migrations on first deploy.
